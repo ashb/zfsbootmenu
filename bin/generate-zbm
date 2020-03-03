@@ -270,6 +270,20 @@ EOF
   safeCopy( $runConf{syslinux_temp}, $config{syslinux}{Config} );
 }
 
+if ( defined( $config{Global}{BackupESP} ) ) {
+  my @backupesp = split(',', $config{Global}{BackupESP});
+  my $mount = join('/', $tempdir, qw(backupesp));
+  foreach my $esp (@backupesp) {
+    print "Mounting $esp to $mount\n";
+    my $cmd = "mount -t vfat $esp $mount";
+    execute($cmd);
+    $cmd = "rsync -aqpP $config{Global}{BootMountPoint}/ $mount";
+    execute($cmd);
+    $cmd = "umount $mount";
+    execute($cmd);
+  }
+}
+
 END {
   cleanupMount;
 }
