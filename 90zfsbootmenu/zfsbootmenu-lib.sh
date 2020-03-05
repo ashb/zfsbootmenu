@@ -211,7 +211,6 @@ find_be_kernels() {
   local fs mnt 
   fs="${1}"
 
-
   local sane kernel version kernel_records
 
   # Check if /boot even exists in the environment
@@ -291,6 +290,13 @@ find_kernel_args() {
 
   local arguments
 
+  # Just use the exact kernel commandline we booted with
+  if [ -z "${inherited_cmdline}" ]; then
+    echo "${inherited_cmdline}"
+    return
+  fi
+
+  # Extract a commandline from /etc/default/grub
   if [ -f "${zfsbe}/etc/default/grub" ]; then
     echo "$(
       . "${zfsbe}/etc/default/grub" ;

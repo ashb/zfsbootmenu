@@ -44,6 +44,14 @@ if getargbool 1 die_on_import_failure ; then
   info "ZFSBootMenu: Disabling die on import failure"
 fi
 
+inherited_cmdline=
+if getargbool 0 inherit_cmdline ; then
+  info "ZFSBootMenu: Inheriting the current kernel commandline"
+  inherited_cmdline="$(getcmdline)"
+  #TODO: sanitize this string!
+fi
+
+
 wait_for_zfs=0
 case "${root}" in
   ""|zfsbootmenu|zfsbootmenu:)
